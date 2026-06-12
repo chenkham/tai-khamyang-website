@@ -204,29 +204,7 @@ export default function Navbar() {
         </div>
 
         {/* Auth Section */}
-        {user ? (
-          <div className="px-6 md:px-12 pt-8 flex flex-col gap-4 w-full shrink-0">
-            <div className={`p-4 rounded-2xl flex items-center gap-4 border ${isLight ? 'border-black/10 bg-black/5' : 'border-white/10 bg-white/5'}`}>
-              <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg shrink-0" style={{ backgroundColor: '#CCFF00', color: '#000' }}>
-                {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <h3 className="font-bold text-lg truncate" style={{ color: 'var(--text-primary)' }}>{user.name || 'User'}</h3>
-                <p className="text-xs opacity-70 truncate" style={{ color: 'var(--text-primary)' }}>{user.email}</p>
-              </div>
-            </div>
-            <button 
-              onClick={() => {
-                logout();
-                handleMobileNavClick();
-              }}
-              className="w-full rounded-full py-4 flex items-center justify-center text-sm font-bold transition-opacity hover:opacity-80"
-              style={{ backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)' }}
-            >
-              LOG OUT
-            </button>
-          </div>
-        ) : (
+        {!user && (
           <div className="px-6 md:px-12 pt-8 flex gap-4 w-full shrink-0">
             <Link 
               to="/login"
