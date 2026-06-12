@@ -39,11 +39,9 @@ export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   const isLight = theme === 'light';
-
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
