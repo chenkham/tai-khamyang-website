@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { useTheme } from '@/hooks/useTheme';
 import { useAuth } from '@/context/AuthContext';
 import { databases, DATABASE_ID, DICTIONARY_COLLECTION_ID } from '@/lib/appwrite';
+import { Query, ID } from 'appwrite';
 import { useNavigate } from 'react-router';
 import WordReveal from '@/components/WordReveal';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -62,10 +63,8 @@ export default function DictionaryPage() {
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    const saved = localStorage.getItem('khamyang_favorites');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [favoriteDocs, setFavoriteDocs] = useState<Record<string, string>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedWord, setSelectedWord] = useState<DictionaryWord | null>(null);
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
@@ -82,7 +81,10 @@ export default function DictionaryPage() {
           setDictionaryDB(mockDictionaryDB);
           return;
         }
-        const response = await databases.listDocuments(DATABASE_ID, DICTIONARY_COLLECTION_ID);
+        const response = await databases.listDocuments(DATABASE_ID, DICTIONARY_COLLECTION_ID, [
+          Query.equal('status', 'approved'),
+          Query.limit(1000)
+        ]);
         const fetchedWords: DictionaryWord[] = response.documents.map((doc) => ({
           id: doc.$id,
           english: doc.english_word,
@@ -103,6 +105,34 @@ export default function DictionaryPage() {
     };
     fetchWords();
   }, []);
+
+  // Fetch favorites from Appwrite
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (!user) {
+        setFavorites([]);
+        setFavoriteDocs({});
+        return;
+      }
+      try {
+        const response = await databases.listDocuments(
+          import.meta.env.VITE_APPWRITE_DATABASE_ID,
+          import.meta.env.VITE_APPWRITE_SAVED_WORDS_COLLECTION_ID,
+          [Query.equal('userId', user.$id), Query.limit(1000)]
+        );
+        const faves = response.documents.map(doc => doc.wordId);
+        const docs: Record<string, string> = {};
+        response.documents.forEach(doc => {
+          docs[doc.wordId] = doc.$id;
+        });
+        setFavorites(faves);
+        setFavoriteDocs(docs);
+      } catch (err) {
+        console.error('Failed to fetch favorites', err);
+      }
+    };
+    fetchFavorites();
+  }, [user]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -140,16 +170,43 @@ export default function DictionaryPage() {
   }, [dictionaryDB]);
 
   // Handle Favorites toggle
-  const toggleFavorite = (id: string) => {
+  const toggleFavorite = async (id: string) => {
     if (!user) {
       setShowLoginPrompt(true);
       return;
     }
-    setFavorites((prev) => {
-      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
-      localStorage.setItem('khamyang_favorites', JSON.stringify(next));
-      return next;
-    });
+    const isSaved = favorites.includes(id);
+    try {
+      if (isSaved) {
+        // Optimistic UI update
+        setFavorites(prev => prev.filter(x => x !== id));
+        const docId = favoriteDocs[id];
+        if (docId) {
+          await databases.deleteDocument(
+            import.meta.env.VITE_APPWRITE_DATABASE_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_WORDS_COLLECTION_ID,
+            docId
+          );
+          setFavoriteDocs(prev => {
+            const next = { ...prev };
+            delete next[id];
+            return next;
+          });
+        }
+      } else {
+        // Optimistic UI update
+        setFavorites(prev => [...prev, id]);
+        const doc = await databases.createDocument(
+          import.meta.env.VITE_APPWRITE_DATABASE_ID,
+          import.meta.env.VITE_APPWRITE_SAVED_WORDS_COLLECTION_ID,
+          ID.unique(),
+          { userId: user.$id, wordId: id }
+        );
+        setFavoriteDocs(prev => ({ ...prev, [id]: doc.$id }));
+      }
+    } catch (err) {
+      console.error('Failed to toggle favorite', err);
+    }
   };
 
   // Copy word details to clipboard

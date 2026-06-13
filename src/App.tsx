@@ -17,6 +17,7 @@ import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
 import EmailConfirmationPage from '@/pages/auth/EmailConfirmationPage';
 import VerifyEmailPage from '@/pages/auth/VerifyEmailPage';
 import ProfilePage from '@/pages/auth/ProfilePage';
+import ContributePage from '@/pages/auth/ContributePage';
 import ResetPasswordPage from '@/pages/auth/ResetPasswordPage';
 import TermsPage from '@/pages/legal/TermsPage';
 import PrivacyPage from '@/pages/legal/PrivacyPage';
@@ -58,6 +59,7 @@ function AppContent() {
           <Route path="/email-confirmation" element={<EmailConfirmationPage />} />
           <Route path="/verify" element={<VerifyEmailPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/contribute" element={<ContributePage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
