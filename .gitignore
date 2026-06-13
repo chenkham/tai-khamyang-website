@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+Admin_Bulk_Uploader.html
+setup_profile_db.js
+update_schema.js
