@@ -15,7 +15,6 @@ export default function ContributePage() {
   const [romanizedWord, setRomanizedWord] = useState('');
   const [englishWord, setEnglishWord] = useState('');
   const [assameseWord, setAssameseWord] = useState('');
-  const [pronunciation, setPronunciation] = useState('');
   const [category, setCategory] = useState('general');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -48,7 +47,6 @@ export default function ContributePage() {
           romanized_word: romanizedWord,
           english_word: englishWord,
           assamese_word: assameseWord,
-          pronunciation: pronunciation,
           category: category,
           status: 'pending',
           contributorName: user?.name || 'Unknown',
@@ -59,7 +57,6 @@ export default function ContributePage() {
       setRomanizedWord('');
       setEnglishWord('');
       setAssameseWord('');
-      setPronunciation('');
       setCategory('general');
       setTimeout(() => setSuccess(false), 5000);
     } catch (err: any) {
@@ -114,10 +111,7 @@ export default function ContributePage() {
             <label className="block text-sm font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-secondary)' }}>Assamese Translation *</label>
             <input type="text" value={assameseWord} onChange={e => setAssameseWord(e.target.value)} className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#CCFF00]/50 transition-colors" style={inputStyle} placeholder="e.g. মাই চুং" required />
           </div>
-          <div>
-            <label className="block text-sm font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-secondary)' }}>Pronunciation (Optional)</label>
-            <input type="text" value={pronunciation} onChange={e => setPronunciation(e.target.value)} className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#CCFF00]/50 transition-colors" style={inputStyle} placeholder="e.g. /mai sʊŋ/" />
-          </div>
+
           <div>
             <label className="block text-sm font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-secondary)' }}>Category</label>
             <select value={category} onChange={e => setCategory(e.target.value)} className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#CCFF00]/50 transition-colors" style={inputStyle}>

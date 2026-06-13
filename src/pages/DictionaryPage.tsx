@@ -8,50 +8,14 @@ import WordReveal from '@/components/WordReveal';
 import ScrollReveal from '@/components/ScrollReveal';
 
 export interface DictionaryWord {
-  id: string; // Changed to string for Appwrite Document ID
+  id: string;
   english: string;
   khamyang: string;
   assamese: string;
-  pronunciation: string;
   category: string;
-  partOfSpeech: string;
-  sentence?: string;
   khamyang_letter_word?: string;
+  sentence?: string;
 }
-
-// Temporary fallback mock data to prevent errors while DB is empty or fetching
-const mockDictionaryDB: DictionaryWord[] = [
-  { id: '1', english: 'Hello', khamyang: 'Mai Sung', assamese: 'মাই চুং', pronunciation: '/mai sʊŋ/', category: 'greetings', partOfSpeech: 'greeting' },
-  { id: '2', english: 'Thank You', khamyang: 'Khop Chai', assamese: 'খোপ চ্য়াই', pronunciation: '/kʰɔp tɕai/', category: 'greetings', partOfSpeech: 'phrase' },
-  { id: '3', english: 'Water', khamyang: 'Nam', assamese: 'নাম', pronunciation: '/nam/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '4', english: 'Sun', khamyang: 'Kang Wen', assamese: 'কাং ৱেন', pronunciation: '/kaŋ wɛn/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '5', english: 'Moon', khamyang: 'Duean', assamese: 'ডুৱন', pronunciation: '/dɯən/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '6', english: 'House', khamyang: 'Ruen', assamese: 'ৰুৱন', pronunciation: '/rɯən/', category: 'family', partOfSpeech: 'noun' },
-  { id: '7', english: 'Eat', khamyang: 'Kin', assamese: 'কিন', pronunciation: '/kin/', category: 'actions', partOfSpeech: 'verb' },
-  { id: '8', english: 'Rice', khamyang: 'Khao', assamese: 'খাও', pronunciation: '/kʰau/', category: 'food', partOfSpeech: 'noun' },
-  { id: '9', english: 'Mother', khamyang: 'Mae', assamese: 'মে', pronunciation: '/mɛ/', category: 'family', partOfSpeech: 'noun' },
-  { id: '10', english: 'Father', khamyang: 'Po', assamese: 'প\'', pronunciation: '/pɔ/', category: 'family', partOfSpeech: 'noun' },
-  { id: '11', english: 'Fire', khamyang: 'Fai', assamese: 'ফাই', pronunciation: '/fai/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '12', english: 'Earth', khamyang: 'Din', assamese: 'দিন', pronunciation: '/din/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '13', english: 'Tree', khamyang: 'Ton Mai', assamese: 'তন মাই', pronunciation: '/ton mai/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '14', english: 'Flower', khamyang: 'Dok Mai', assamese: 'ডক মাই', pronunciation: '/dok mai/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '15', english: 'Star', khamyang: 'Dao', assamese: 'দাও', pronunciation: '/dau/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '16', english: 'Sky', khamyang: 'Fa', assamese: 'ফা', pronunciation: '/fa/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '17', english: 'Wind', khamyang: 'Lom', assamese: 'লম', pronunciation: '/lom/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '18', english: 'Go', khamyang: 'Pai', assamese: 'পাই', pronunciation: '/pai/', category: 'actions', partOfSpeech: 'verb' },
-  { id: '19', english: 'Come', khamyang: 'Ma', assamese: 'মা', pronunciation: '/ma/', category: 'actions', partOfSpeech: 'verb' },
-  { id: '20', english: 'Good', khamyang: 'Di', assamese: 'দি', pronunciation: '/di/', category: 'adjectives', partOfSpeech: 'adjective' },
-  { id: '21', english: 'Beautiful', khamyang: 'Ngam', assamese: 'ঙাম', pronunciation: '/ŋam/', category: 'adjectives', partOfSpeech: 'adjective' },
-  { id: '22', english: 'One', khamyang: 'Neung', assamese: 'নুং', pronunciation: '/nɯŋ/', category: 'numbers', partOfSpeech: 'numeral' },
-  { id: '23', english: 'Two', khamyang: 'Song', assamese: 'ছং', pronunciation: '/sɔŋ/', category: 'numbers', partOfSpeech: 'numeral' },
-  { id: '24', english: 'Three', khamyang: 'Sam', assamese: 'ছাম', pronunciation: '/sam/', category: 'numbers', partOfSpeech: 'numeral' },
-  { id: '25', english: 'Four', khamyang: 'Si', assamese: 'ছি', pronunciation: '/si/', category: 'numbers', partOfSpeech: 'numeral' },
-  { id: '26', english: 'Five', khamyang: 'Ha', assamese: 'হা', pronunciation: '/ha/', category: 'numbers', partOfSpeech: 'numeral' },
-  { id: '27', english: 'Big', khamyang: 'Luang', assamese: 'লুৱাং', pronunciation: '/luaŋ/', category: 'adjectives', partOfSpeech: 'adjective' },
-  { id: '28', english: 'Small', khamyang: 'Noi', assamese: 'নয়', pronunciation: '/nɔi/', category: 'adjectives', partOfSpeech: 'adjective' },
-  { id: '29', english: 'Cat', khamyang: 'Meu', assamese: 'মিউ', pronunciation: '/mɯː/', category: 'nature', partOfSpeech: 'noun' },
-  { id: '30', english: 'Fish', khamyang: 'Pa', assamese: 'পা', pronunciation: '/paː/', category: 'nature', partOfSpeech: 'noun' }
-];
 
 export default function DictionaryPage() {
   const { theme } = useTheme();
@@ -59,7 +23,8 @@ export default function DictionaryPage() {
   const navigate = useNavigate();
   const isLight = theme === 'light';
   
-  const [dictionaryDB, setDictionaryDB] = useState<DictionaryWord[]>(mockDictionaryDB);
+  const [dictionaryDB, setDictionaryDB] = useState<DictionaryWord[]>([]);
+  const [loadingDictionary, setLoadingDictionary] = useState(true);
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -77,8 +42,8 @@ export default function DictionaryPage() {
     const fetchWords = async () => {
       try {
         if (!DATABASE_ID || !DICTIONARY_COLLECTION_ID) {
-          console.warn('Appwrite not configured yet, using mock data.');
-          setDictionaryDB(mockDictionaryDB);
+          console.warn('Appwrite not configured.');
+          setLoadingDictionary(false);
           return;
         }
         const response = await databases.listDocuments(DATABASE_ID, DICTIONARY_COLLECTION_ID, [
@@ -87,20 +52,18 @@ export default function DictionaryPage() {
         ]);
         const fetchedWords: DictionaryWord[] = response.documents.map((doc) => ({
           id: doc.$id,
-          english: doc.english_word,
-          khamyang: doc.romanized_word,
-          assamese: doc.assamese_word,
+          english: doc.english_word || '',
+          khamyang: doc.romanized_word || '',
+          assamese: doc.assamese_word || '',
           khamyang_letter_word: doc.khamyang_letter_word,
           sentence: doc.sentence,
-          pronunciation: doc.pronunciation || '',
           category: doc.category || 'general',
-          partOfSpeech: doc.part_of_speech || 'noun',
         }));
-        if (fetchedWords.length > 0) {
-          setDictionaryDB(fetchedWords);
-        }
+        setDictionaryDB(fetchedWords);
       } catch (error) {
         console.error('Error fetching dictionary:', error);
+      } finally {
+        setLoadingDictionary(false);
       }
     };
     fetchWords();
@@ -163,7 +126,7 @@ export default function DictionaryPage() {
 
   // Word of the day based deterministically on date
   const wordOfTheDay = useMemo(() => {
-    if (dictionaryDB.length === 0) return mockDictionaryDB[0];
+    if (dictionaryDB.length === 0) return null;
     const day = new Date().getDate();
     const index = day % dictionaryDB.length;
     return dictionaryDB[index];
@@ -211,7 +174,7 @@ export default function DictionaryPage() {
 
   // Copy word details to clipboard
   const copyToClipboard = (word: DictionaryWord) => {
-    const text = `${word.khamyang} (${word.pronunciation}) - Assamese: ${word.assamese} - English: ${word.english}`;
+    const text = `${word.khamyang} - Assamese: ${word.assamese} - English: ${word.english}`;
     navigator.clipboard.writeText(text).then(() => {
       setCopiedId(word.id);
       setTimeout(() => setCopiedId(null), 2000);
@@ -324,7 +287,7 @@ export default function DictionaryPage() {
         
         <ScrollReveal delay={0.15}>
           <p className="text-sm md:text-base text-center mb-10 max-w-[600px] mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Search or select a category below. Click any word to pop up its Assamese and pronunciation details.
+            Search or select a category below. Click any word to see its translations.
           </p>
         </ScrollReveal>
 
@@ -420,11 +383,23 @@ export default function DictionaryPage() {
           </div>
 
         {/* Dynamic Content Switching */}
-        {!isSearchActive ? (
+        {loadingDictionary ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-10 h-10 rounded-full border-2 border-t-transparent animate-spin mb-4" style={{ borderColor: isLight ? '#007722' : '#CCFF00', borderTopColor: 'transparent' }} />
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Loading dictionary...</p>
+          </div>
+        ) : dictionaryDB.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <svg className="w-16 h-16 opacity-20 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+            <p className="text-lg font-medium mb-2" style={{ color: 'var(--text-primary)' }}>No words in the dictionary yet</p>
+            <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Words will appear here once they are added and approved.</p>
+          </div>
+        ) : !isSearchActive ? (
           /* Landing Relaxed state - No words shown yet */
           <div className="max-w-xl mx-auto w-full mt-4">
             
             {/* Word of the Day */}
+            {wordOfTheDay && (
             <ScrollReveal delay={0.3} className="w-full flex flex-col">
               <h3 className="text-xs font-bold uppercase tracking-widest mb-3 text-center sm:text-left" style={{ color: 'var(--text-secondary)' }}>
                 Word of the Day ✦
@@ -443,7 +418,7 @@ export default function DictionaryPage() {
                 <div>
                   <div className="flex justify-between items-start mb-8">
                     <span className="text-xs font-mono uppercase tracking-widest px-3 py-1 rounded-full border" style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
-                      {wordOfTheDay.partOfSpeech}
+                      {wordOfTheDay.category}
                     </span>
                     <span 
                       className="text-xs font-semibold uppercase tracking-wider"
@@ -471,6 +446,7 @@ export default function DictionaryPage() {
                 </div>
               </div>
             </ScrollReveal>
+            )}
           </div>
         ) : (
           /* Search active / Category filtered state */
@@ -560,7 +536,7 @@ export default function DictionaryPage() {
             {/* Modal Header */}
             <div className="flex justify-between items-start mb-6">
               <span className="text-xs font-mono uppercase tracking-widest px-3 py-1 rounded-full border" style={{ borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }}>
-                {selectedWord.partOfSpeech}
+                {selectedWord.category}
               </span>
               
               <button 
@@ -576,16 +552,11 @@ export default function DictionaryPage() {
 
             {/* Tai Khamyang (Romanized) */}
             <h2 
-              className="text-4xl md:text-5xl font-bold uppercase tracking-tight mb-1"
+              className="text-4xl md:text-5xl font-bold uppercase tracking-tight mb-6"
               style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}
             >
               {selectedWord.khamyang}
             </h2>
-
-            {/* Pronunciation IPA */}
-            <span className="text-sm font-mono opacity-50 block mb-6">
-              {selectedWord.pronunciation}
-            </span>
 
             {/* Language translations list */}
             <div className="flex flex-col gap-4 py-5 border-t border-b" style={{ borderColor: 'var(--border-color)' }}>

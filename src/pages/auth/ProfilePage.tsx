@@ -218,9 +218,8 @@ export default function ProfilePage() {
                       </div>
                       <div className="text-xs opacity-70 grid grid-cols-2 gap-1 mt-3">
                         <p><strong>Assamese:</strong> {word.assamese_word}</p>
-                        <p><strong>Pronunciation:</strong> {word.pronunciation}</p>
                         <p><strong>Category:</strong> {word.category}</p>
-                        <p><strong>Submitter:</strong> {word.contributorName} ({word.contributorEmail})</p>
+                        <p className="col-span-2"><strong>Submitter:</strong> {word.contributorName} ({word.contributorEmail})</p>
                       </div>
                     </div>
                   ))}
